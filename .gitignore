@@ -1,2 +1,30 @@
 myprivatecreds.*
 testforgitignore.*
+/.metadata/
+# Java Related
+*.jar
+*.war
+*.ear
+*.class
+
+#Eclipse Specific
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+#External tool builders
+.externalToolBuilders/
+
+#Locally stored "Eclipse Launch configurations"
+*.launch
