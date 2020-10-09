@@ -43,6 +43,13 @@ public class SocketClient {
 						break;
 					}
 					line = "";
+					String fromServer = in.readLine();
+					if (fromServer != null) {
+						System.out.println("Reply from server: " + fromServer);
+					} else {
+						System.out.println("Server disconnected");
+						break;
+					}
 				} catch (Exception e) {
 					System.out.println("Connection dropped");
 					break;
@@ -69,7 +76,17 @@ public class SocketClient {
 
 	public static void main(String[] args) {
 		SocketClient client = new SocketClient();
-		client.connect("127.0.0.1", 3001);// must match what server is listening to
+		int port = -1;
+		try {
+			port = Integer.parseInt(args[0]);
+		} catch (Exception e) {
+			System.out.println("Invalid port");
+		}
+
+		if (port == -1) {
+			return;
+		}
+		client.connect("127.0.0.1", port);// must match what server is listening to
 		try {
 			// if start is private, it's valid here since this main is part of the class
 			client.start();
