@@ -176,6 +176,7 @@ public class NumberGuesserHW {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private boolean loadBet() {
 		File file = new File(saveBetFile);
 		if (!file.exists()) {
