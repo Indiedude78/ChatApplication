@@ -37,19 +37,7 @@ public class Room implements AutoCloseable {
 		} else {
 			clients.add(client);
 			if (client.getClientName() != null) {
-				client.sendClearList();
-				sendConnectionStatus(client, true, "joined the room " + getName());
-				updateClientList(client);
-			}
-		}
-	}
-
-	private void updateClientList(ServerThread client) {
-		Iterator<ServerThread> iter = clients.iterator();
-		while (iter.hasNext()) {
-			ServerThread c = iter.next();
-			if (c != client) {
-				boolean messageSent = client.sendConnectionStatus(c.getClientName(), true, null);
+				sendMessage(client, "joined the room " + getName());
 			}
 		}
 	}
@@ -57,8 +45,7 @@ public class Room implements AutoCloseable {
 	protected synchronized void removeClient(ServerThread client) {
 		clients.remove(client);
 		if (clients.size() > 0) {
-			// sendMessage(client, "left the room");
-			sendConnectionStatus(client, false, "left the room " + getName());
+			sendMessage(client, "left the room");
 		} else {
 			cleanupEmptyRoom();
 		}
@@ -127,15 +114,14 @@ public class Room implements AutoCloseable {
 		return wasCommand;
 	}
 
-	// TODO changed from string to ServerThread
-	protected void sendConnectionStatus(ServerThread client, boolean isConnect, String message) {
+	protected void sendConnectionStatus(String clientName, boolean isConnect) {
 		Iterator<ServerThread> iter = clients.iterator();
 		while (iter.hasNext()) {
-			ServerThread c = iter.next();
-			boolean messageSent = c.sendConnectionStatus(client.getClientName(), isConnect, message);
+			ServerThread client = iter.next();
+			boolean messageSent = client.sendConnectionStatus(clientName, isConnect);
 			if (!messageSent) {
 				iter.remove();
-				log.log(Level.INFO, "Removed client " + c.getId());
+				log.log(Level.INFO, "Removed client " + client.getId());
 			}
 		}
 	}
