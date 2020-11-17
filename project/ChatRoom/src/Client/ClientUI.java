@@ -211,9 +211,10 @@ public class ClientUI extends JFrame implements Event {
 	}
 
 	void addMessage(String str) {
-		JEditorPane entry = new JEditorPane();
+		JEditorPane entry = new JEditorPane("text/html", "");
 		entry.setEditable(false);
 		// entry.setLayout(null);
+
 		entry.setText(str);
 		Dimension d = new Dimension(textArea.getSize().width, calcHeightForText(str));
 		// attempt to lock all dimensions
