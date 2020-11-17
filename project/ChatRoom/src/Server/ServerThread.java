@@ -71,6 +71,22 @@ public class ServerThread extends Thread {
 		Payload payload = new Payload();
 		payload.setPayloadType(PayloadType.MESSAGE);
 		payload.setClientName(clientName);
+		int count = 0;
+		for (int i = 0; i < message.length(); i++) {
+			if (message.charAt(i) == '*' || message.charAt(i) == '&' || message.charAt(i) == '%') {
+				count++;
+			}
+		}
+
+		if (count >= 2) {
+			message = message.replace("*", "<b>");
+			message = message.replace("<b> ", "<b/> ");
+			message = message.replace("&", "<i>");
+			message = message.replace("<i> ", "</i> ");
+			message = message.replace("%", "<u>");
+			message = message.replace("<u> ", "</u> ");
+
+		}
 		payload.setMessage(message);
 
 		return sendPayload(payload);
