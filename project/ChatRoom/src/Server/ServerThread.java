@@ -80,7 +80,7 @@ public class ServerThread extends Thread {
 
 		if (count >= 2) {
 			message = message.replace("*", "<b>");
-			message = message.replace("<b> ", "<b/> ");
+			message = message.replace("<b> ", "</b> ");
 			message = message.replace("&", "<i>");
 			message = message.replace("<i> ", "</i> ");
 			message = message.replace("%", "<u>");
