@@ -18,8 +18,9 @@ public class Room implements AutoCloseable {
 	private final static String JOIN_ROOM = "joinroom";
 	private final static String ROLL = "roll";
 	private final static String FLIP = "flip";
-	private final String Random_Roll_MSG = "Random number is : ";
-	private final String Random_Coin_MSG = "Coin Toss: ";
+	private final String Random_Roll_MSG = "<i>Random number is :</i> ";
+	private final String Random_Coin_MSG = "<i>Coin Toss:</i> ";
+	private String coin;
 	private Random rand = new Random();
 	int randomNumber = 0;
 
@@ -128,17 +129,16 @@ public class Room implements AutoCloseable {
 					break;
 				case ROLL:
 					randomNumber = rand.nextInt(9) + 1;
-					this.sendMessage(client, Random_Roll_MSG + randomNumber);
+					this.sendMessage(client, Random_Roll_MSG + "<b><u>" + Integer.toString(randomNumber) + "</b></u>");
 					wasCommand = true;
 					break;
 				case FLIP:
-					randomNumber = rand.nextInt(2);
-					String coin;
-					if (randomNumber == 0) {
-						coin = "HEADS";
+					randomNumber = rand.nextInt(9) + 1;
+					if (randomNumber % 2 == 0) {
+						coin = "<b style=color:red><u>HEADS</u></b>";
 						this.sendMessage(client, Random_Coin_MSG + coin);
-					} else if (randomNumber == 1) {
-						coin = "TAILS";
+					} else if (randomNumber % 2 == 1) {
+						coin = "<b style=color:green><u>TAILS</u></b>";
 						this.sendMessage(client, Random_Coin_MSG + coin);
 					}
 					wasCommand = true;
