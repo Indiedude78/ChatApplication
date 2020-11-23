@@ -24,9 +24,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+//import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
+//import javax.swing.SwingConstants;
 
 public class ClientUI extends JFrame implements Event {
 	/**
@@ -39,7 +41,7 @@ public class ClientUI extends JFrame implements Event {
 	JPanel userPanel;
 	List<User> users = new ArrayList<User>();
 	private final static Logger log = Logger.getLogger(ClientUI.class.getName());
-	Dimension windowSize = new Dimension(400, 400);
+	Dimension windowSize = new Dimension(450, 500);
 
 	public ClientUI(String title) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -167,12 +169,12 @@ public class ClientUI extends JFrame implements Event {
 		Dimension d = new Dimension(100, windowSize.height);
 		scroll.setPreferredSize(d);
 
-		textArea.getParent().getParent().getParent().add(scroll, BorderLayout.EAST);
+		textArea.getParent().getParent().getParent().add(scroll, BorderLayout.WEST);
 	}
 
 	void addClient(String name) {
 		User u = new User(name);
-		Dimension p = new Dimension(userPanel.getSize().width, 30);
+		Dimension p = new Dimension(userPanel.getSize().width, 35);
 		u.setPreferredSize(p);
 		u.setMinimumSize(p);
 		u.setMaximumSize(p);
@@ -200,27 +202,27 @@ public class ClientUI extends JFrame implements Event {
 		FontMetrics metrics = self.getGraphics().getFontMetrics(self.getFont());
 		int hgt = metrics.getHeight();
 		int adv = metrics.stringWidth(str);
-		final int PIXEL_PADDING = 6;
+		final int PIXEL_PADDING = 7;
 		Dimension size = new Dimension(adv, hgt + PIXEL_PADDING);
-		final float PADDING_PERCENT = 1.1f;
+		final float PADDING_PERCENT = 1.3f;
 		// calculate modifier to line wrapping so we can display the wrapped message
 		int mult = (int) Math.floor(size.width / (textArea.getSize().width * PADDING_PERCENT));
-		// System.out.println(mult);
 		mult++;
 		return size.height * mult;
 	}
 
 	void addMessage(String str) {
-		JEditorPane entry = new JEditorPane("text/html", "");
-		entry.setEditable(false);
-		// entry.setLayout(null);
+    JEditorPane entry = new JEditorPane("text/html", "");
+    entry.setEditable(false);
 
 		entry.setText(str);
+
 		Dimension d = new Dimension(textArea.getSize().width, calcHeightForText(str));
 		// attempt to lock all dimensions
 		entry.setMinimumSize(d);
 		entry.setPreferredSize(d);
 		entry.setMaximumSize(d);
+		// entry.add(s);
 		textArea.add(entry);
 
 		pack();
@@ -256,7 +258,7 @@ public class ClientUI extends JFrame implements Event {
 		log.log(Level.INFO, String.format("%s: %s", clientName, message));
 		addClient(clientName);
 		if (message != null && !message.isBlank()) {
-			self.addMessage(String.format("%s: %s", clientName, message));
+			self.addMessage(String.format("<i>%s:</i> %s", clientName, message));
 		}
 	}
 
@@ -269,7 +271,7 @@ public class ClientUI extends JFrame implements Event {
 			if (u.getName() == clientName) {
 				removeClient(u);
 				iter.remove();
-				self.addMessage(String.format("%s: %s", clientName, message));
+				self.addMessage(String.format("<i>%s:</i> %s", clientName, message));
 				break;
 			}
 
@@ -279,7 +281,7 @@ public class ClientUI extends JFrame implements Event {
 	@Override
 	public void onMessageReceive(String clientName, String message) {
 		log.log(Level.INFO, String.format("%s: %s", clientName, message));
-		self.addMessage(String.format("%s: %s", clientName, message));
+		self.addMessage(String.format("<i>%s:</i> %s", clientName, message));
 	}
 
 	@Override
