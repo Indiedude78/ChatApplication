@@ -71,9 +71,46 @@ public class ServerThread extends Thread {
 		Payload payload = new Payload();
 		payload.setPayloadType(PayloadType.MESSAGE);
 		payload.setClientName(clientName);
-		payload.setMessage(message);
+		payload.setMessage(processSpecialMessage(message));
 
 		return sendPayload(payload);
+	}
+
+	protected String processSpecialMessage(String str) {
+		int count = 0;
+		int targetChar = 0;
+		String color = null;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '*' || str.charAt(0) == '#' || str.charAt(0) == '_') {
+				count++;
+			}
+
+			if (str.charAt(i) == '&') {
+				count++;
+				targetChar = str.indexOf('&');
+				if (targetChar != -1) {
+					color = str.substring(0, targetChar).toLowerCase();
+				}
+
+			}
+		}
+
+		if (count >= 2) {
+			str = str.replace("*", "<b>");
+			str = str.replace("<b> ", "</b> ");
+			str = str.replace("#", "<i>");
+			str = str.replace("<i> ", "</i> ");
+			str = str.replace("_", "<u>");
+			str = str.replace("<u> ", "</u> ");
+			if (color != null) {
+				str = str.replace(str.substring(0, targetChar), "");
+				str = str.replace("&", "<b style=color:" + color.toString() + ">");
+				str = str.replace("<b style=color:" + color.toString() + "> ", "</b> ");
+			}
+
+		}
+
+		return str;
 	}
 
 	protected boolean sendConnectionStatus(String clientName, boolean isConnect, String message) {

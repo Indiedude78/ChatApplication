@@ -212,11 +212,9 @@ public class ClientUI extends JFrame implements Event {
 	}
 
 	void addMessage(String str) {
-		JEditorPane entry = new JEditorPane();
-		// JSeparator s = new JSeparator();
-		// s.setOrientation(SwingConstants.HORIZONTAL);
-		entry.setEditable(false);
-		// entry.setLayout(null);
+    JEditorPane entry = new JEditorPane("text/html", "");
+    entry.setEditable(false);
+
 		entry.setText(str);
 
 		Dimension d = new Dimension(textArea.getSize().width, calcHeightForText(str));
