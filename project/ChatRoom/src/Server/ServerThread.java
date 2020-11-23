@@ -15,6 +15,7 @@ public class ServerThread extends Thread {
 	private Room currentRoom;// what room we are in, should be lobby by default
 	private String clientName;
 	private final static Logger log = Logger.getLogger(ServerThread.class.getName());
+	private final static String privateMessageCommand = "@";
 
 	public String getClientName() {
 		return clientName;
@@ -81,13 +82,13 @@ public class ServerThread extends Thread {
 		int targetChar = 0;
 		String color = null;
 		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == '*' || str.charAt(0) == '#' || str.charAt(0) == '_') {
+			if (str.charAt(i) == '*' || str.charAt(i) == '#' || str.charAt(i) == '_') {
 				count++;
 			}
 
 			if (str.charAt(i) == '&') {
 				count++;
-				targetChar = str.indexOf('&');
+				targetChar = str.indexOf(privateMessageCommand);
 				if (targetChar != -1) {
 					color = str.substring(0, targetChar).toLowerCase();
 				}

@@ -212,8 +212,8 @@ public class ClientUI extends JFrame implements Event {
 	}
 
 	void addMessage(String str) {
-    JEditorPane entry = new JEditorPane("text/html", "");
-    entry.setEditable(false);
+		JEditorPane entry = new JEditorPane("text/html", "");
+		entry.setEditable(false);
 
 		entry.setText(str);
 
