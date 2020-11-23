@@ -89,7 +89,7 @@ public class ServerThread extends Thread {
 				count++;
 				targetChar = str.indexOf('&');
 				if (targetChar != -1) {
-					color = str.substring(0, targetChar).toUpperCase();
+					color = str.substring(0, targetChar).toLowerCase();
 				}
 
 			}
@@ -104,8 +104,8 @@ public class ServerThread extends Thread {
 			str = str.replace("<u> ", "</u> ");
 			if (color != null) {
 				str = str.replace(str.substring(0, targetChar), "");
-				str = str.replace("&", "<b style=color:" + color + ">");
-				str = str.replace("<b style=color:" + color + "> ", "</b> ");
+				str = str.replace("&", "<b style=color:" + color.toString() + ">");
+				str = str.replace("<b style=color:" + color.toString() + "> ", "</b> ");
 			}
 
 		}

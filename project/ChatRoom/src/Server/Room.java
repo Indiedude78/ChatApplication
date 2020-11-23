@@ -151,6 +151,36 @@ public class Room implements AutoCloseable {
 		return wasCommand;
 	}
 
+	protected boolean processPrivateMessage(String message, ServerThread client) {
+		boolean wasPrivate = false;
+		String privClient = null;
+		String newMessage = message;
+		try {
+			if (message.indexOf("@") > -1) {
+				String[] comm = message.split("@");
+				log.log(Level.INFO, message);
+				String part1 = comm[1];
+				String[] comm2 = part1.split(":");
+				privClient = comm2[0];
+				newMessage = comm2[1];
+				wasPrivate = true;
+			}
+
+			Iterator<ServerThread> iter = clients.iterator();
+			while (iter.hasNext()) {
+				ServerThread c = iter.next();
+				if (c.getClientName().equals(privClient)) {
+					c.send(client.getClientName(), newMessage);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// client = privClient;
+		return wasPrivate;
+		// return message;
+	}
+
 	// TODO changed from string to ServerThread
 	protected void sendConnectionStatus(ServerThread client, boolean isConnect, String message) {
 		Iterator<ServerThread> iter = clients.iterator();
@@ -178,8 +208,12 @@ public class Room implements AutoCloseable {
 			// it was a command, don't broadcast
 			return;
 		}
+		if (processPrivateMessage(message, sender)) {
+			return;
+		}
 		Iterator<ServerThread> iter = clients.iterator();
 		while (iter.hasNext()) {
+
 			ServerThread client = iter.next();
 			boolean messageSent = client.send(sender.getClientName(), message);
 			if (!messageSent) {
