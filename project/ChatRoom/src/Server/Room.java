@@ -171,6 +171,7 @@ public class Room implements AutoCloseable {
 				ServerThread c = iter.next();
 				if (c.getClientName().equals(privClient)) {
 					c.send(client.getClientName(), newMessage);
+					client.send(client.getClientName(), newMessage);
 				}
 			}
 		} catch (Exception e) {
