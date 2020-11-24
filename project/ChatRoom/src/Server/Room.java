@@ -14,6 +14,7 @@ public class Room implements AutoCloseable {
 
 	// Commands
 	private final static String COMMAND_TRIGGER = "/";
+	private final static String privateMessageCommand = "@";
 	private final static String CREATE_ROOM = "createroom";
 	private final static String JOIN_ROOM = "joinroom";
 	private final static String ROLL = "roll";
@@ -156,8 +157,8 @@ public class Room implements AutoCloseable {
 		String privClient = null;
 		String newMessage = message;
 		try {
-			if (message.indexOf("@") > -1) {
-				String[] comm = message.split("@");
+			if (message.indexOf(privateMessageCommand) > -1) {
+				String[] comm = message.split(privateMessageCommand);
 				log.log(Level.INFO, message);
 				String part1 = comm[1];
 				String[] comm2 = part1.split(":");
