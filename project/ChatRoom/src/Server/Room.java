@@ -21,6 +21,8 @@ public class Room implements AutoCloseable {
 	private final static String FLIP = "flip";
 	private final String Random_Roll_MSG = "<i>Random number is :</i> ";
 	private final String Random_Coin_MSG = "<i>Coin Toss:</i> ";
+	private final String privateMessageReceive = "[PRIVATE MESSAGE RECIEVED]";
+	private final String privateMessageSent = "[PRIVATE MESSAGE SENT]";
 	private String coin;
 	private Random rand = new Random();
 	int randomNumber = 0;
@@ -171,8 +173,8 @@ public class Room implements AutoCloseable {
 			while (iter.hasNext()) {
 				ServerThread c = iter.next();
 				if (c.getClientName().equals(privClient)) {
-					c.send(client.getClientName(), newMessage);
-					client.send(client.getClientName(), newMessage);
+					c.send(client.getClientName(), privateMessageReceive + newMessage);
+					client.send(client.getClientName(), privateMessageSent + newMessage);
 				}
 			}
 		} catch (Exception e) {
