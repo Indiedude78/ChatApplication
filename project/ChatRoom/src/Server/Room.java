@@ -19,6 +19,8 @@ public class Room implements AutoCloseable {
 	private final static String JOIN_ROOM = "joinroom";
 	private final static String ROLL = "roll";
 	private final static String FLIP = "flip";
+	private final static String MUTE = "mute";
+	private final static String UNMUTE = "unmute";
 	private final String Random_Roll_MSG = "<i>Random number is :</i> ";
 	private final String Random_Coin_MSG = "<i>Coin Toss:</i> ";
 	private final String privateMessageReceive = "[PRIVATE MESSAGE RECIEVED]";
@@ -117,6 +119,8 @@ public class Room implements AutoCloseable {
 					command = command.toLowerCase();
 				}
 				String roomName;
+				String clientMuteUnmute;
+				Iterator<ServerThread> iter = clients.iterator();
 				switch (command) {
 				case CREATE_ROOM:
 					roomName = comm2[1];
@@ -146,6 +150,26 @@ public class Room implements AutoCloseable {
 					}
 					wasCommand = true;
 					break;
+				case MUTE:
+					clientMuteUnmute = comm2[1];
+
+					while (iter.hasNext()) {
+						ServerThread c = iter.next();
+						if (c.getClientName().equals(clientMuteUnmute)) {
+							c.mutedClients.add(clientMuteUnmute);
+							break;
+						}
+					}
+				case UNMUTE:
+					clientMuteUnmute = comm2[1];
+					while (iter.hasNext()) {
+						ServerThread c = iter.next();
+						if (c.mutedClients.contains(clientMuteUnmute)) {
+							c.mutedClients.remove(clientMuteUnmute);
+							break;
+						}
+					}
+
 				}
 			}
 		} catch (Exception e) {
@@ -219,11 +243,14 @@ public class Room implements AutoCloseable {
 		while (iter.hasNext()) {
 
 			ServerThread client = iter.next();
-			boolean messageSent = client.send(sender.getClientName(), message);
-			if (!messageSent) {
-				iter.remove();
-				log.log(Level.INFO, "Removed client " + client.getId());
+			if (!sender.isMuted(sender.getClientName())) {
+				boolean messageSent = client.send(sender.getClientName(), message);
+				if (!messageSent) {
+					iter.remove();
+					log.log(Level.INFO, "Removed client " + client.getId());
+				}
 			}
+
 		}
 	}
 
