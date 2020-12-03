@@ -77,39 +77,51 @@ public class ServerThread extends Thread {
 	}
 
 	protected String processSpecialMessage(String str) {
-		int count = 0;
+		int countBold = 0;
+		int countItalic = 0;
+		int countUnderline = 0;
+		int countColor = 0;
 		int targetChar = 0;
 		String color = null;
 		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == '*' || str.charAt(0) == '#' || str.charAt(0) == '_') {
-				count++;
+			if (str.charAt(i) == '*') {
+				countBold++;
+			}
+
+			if (str.charAt(i) == '#') {
+				countItalic++;
+			}
+
+			if (str.charAt(0) == '_') {
+				countUnderline++;
 			}
 
 			if (str.charAt(i) == '&') {
-				count++;
+				countColor++;
 				targetChar = str.indexOf('&');
 				if (targetChar != -1) {
-					color = str.substring(0, targetChar).toUpperCase();
+					color = str.substring(0, targetChar).toLowerCase();
 				}
-
 			}
 		}
 
-		if (count >= 2) {
+		if (countBold >= 2) {
 			str = str.replace("*", "<b>");
 			str = str.replace("<b> ", "</b> ");
+		}
+		if (countItalic >= 2) {
 			str = str.replace("#", "<i>");
 			str = str.replace("<i> ", "</i> ");
+		}
+		if (countUnderline >= 2) {
 			str = str.replace("_", "<u>");
 			str = str.replace("<u> ", "</u> ");
-			if (color != null) {
-				str = str.replace(str.substring(0, targetChar), "");
-				str = str.replace("&", "<b style=color:" + color + ">");
-				str = str.replace("<b style=color:" + color + "> ", "</b> ");
-			}
-
 		}
-
+		if (countColor >= 2 || color != null) {
+			str = str.replace(str.substring(0, targetChar), "");
+			str = str.replace("&", "<font style=color:" + color + ">");
+			str = str.replace("<font style=color:" + color + "> ", "</font> ");
+		}
 		return str;
 	}
 
