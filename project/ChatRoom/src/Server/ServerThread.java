@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,6 +18,19 @@ public class ServerThread extends Thread {
 	private Room currentRoom;// what room we are in, should be lobby by default
 	private String clientName;
 	private final static Logger log = Logger.getLogger(ServerThread.class.getName());
+	private String color;
+	List<String> mutedClients = new ArrayList<String>();
+
+	public boolean isMuted(String clientName) {
+		Iterator<String> iter = mutedClients.iterator();
+		while (iter.hasNext()) {
+			String mutedC = iter.next();
+			if (mutedC.equals(clientName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public String getClientName() {
 		return clientName;
@@ -82,8 +98,8 @@ public class ServerThread extends Thread {
 		int countUnderline = 0;
 		int countColor = 0;
 		int targetChar = 0;
-		String color = null;
 		for (int i = 0; i < str.length(); i++) {
+
 			if (str.charAt(i) == '*') {
 				countBold++;
 			}
