@@ -19,6 +19,8 @@ public class Room implements AutoCloseable {
 	private final static String JOIN_ROOM = "joinroom";
 	private final static String ROLL = "roll";
 	private final static String FLIP = "flip";
+	private final static String MUTE = "mute";
+	private final static String UNMUTE = "unmute";
 	private final String Random_Roll_MSG = "<i>Random number is :</i> ";
 	private final String Random_Coin_MSG = "<i>Coin Toss:</i> ";
 	private final String privateMessageReceive = "[PRIVATE MESSAGE RECIEVED]";
@@ -117,6 +119,8 @@ public class Room implements AutoCloseable {
 					command = command.toLowerCase();
 				}
 				String roomName;
+				String clientMuteUnmute;
+				// Iterator<ServerThread> iter = clients.iterator();
 				switch (command) {
 				case CREATE_ROOM:
 					roomName = comm2[1];
@@ -144,6 +148,16 @@ public class Room implements AutoCloseable {
 						coin = "<b style=color:green><u>TAILS</u></b>";
 						this.sendMessage(client, Random_Coin_MSG + coin);
 					}
+					wasCommand = true;
+					break;
+				case MUTE:
+					clientMuteUnmute = comm2[1];
+					client.mutedClients.add(clientMuteUnmute);
+					wasCommand = true;
+					break;
+				case UNMUTE:
+					clientMuteUnmute = comm2[1];
+					client.mutedClients.remove(clientMuteUnmute);
 					wasCommand = true;
 					break;
 				}
@@ -180,9 +194,8 @@ public class Room implements AutoCloseable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// client = privClient;
 		return wasPrivate;
-		// return message;
+
 	}
 
 	// TODO changed from string to ServerThread
@@ -219,11 +232,14 @@ public class Room implements AutoCloseable {
 		while (iter.hasNext()) {
 
 			ServerThread client = iter.next();
-			boolean messageSent = client.send(sender.getClientName(), message);
-			if (!messageSent) {
-				iter.remove();
-				log.log(Level.INFO, "Removed client " + client.getId());
+			if (!client.isMuted(sender.getClientName())) {
+				boolean messageSent = client.send(sender.getClientName(), message);
+				if (!messageSent) {
+					iter.remove();
+					log.log(Level.INFO, "Removed client " + client.getId());
+				}
 			}
+
 		}
 	}
 
