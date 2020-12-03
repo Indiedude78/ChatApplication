@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +22,14 @@ public class ServerThread extends Thread {
 	List<String> mutedClients = new ArrayList<String>();
 
 	public boolean isMuted(String clientName) {
-		return mutedClients.contains(clientName);
+		Iterator<String> iter = mutedClients.iterator();
+		while (iter.hasNext()) {
+			String mutedC = iter.next();
+			if (mutedC.equals(clientName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getClientName() {

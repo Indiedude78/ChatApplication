@@ -120,7 +120,7 @@ public class Room implements AutoCloseable {
 				}
 				String roomName;
 				String clientMuteUnmute;
-				Iterator<ServerThread> iter = clients.iterator();
+				// Iterator<ServerThread> iter = clients.iterator();
 				switch (command) {
 				case CREATE_ROOM:
 					roomName = comm2[1];
@@ -152,24 +152,14 @@ public class Room implements AutoCloseable {
 					break;
 				case MUTE:
 					clientMuteUnmute = comm2[1];
-
-					while (iter.hasNext()) {
-						ServerThread c = iter.next();
-						if (c.getClientName().equals(clientMuteUnmute)) {
-							c.mutedClients.add(clientMuteUnmute);
-							break;
-						}
-					}
+					client.mutedClients.add(clientMuteUnmute);
+					wasCommand = true;
+					break;
 				case UNMUTE:
 					clientMuteUnmute = comm2[1];
-					while (iter.hasNext()) {
-						ServerThread c = iter.next();
-						if (c.mutedClients.contains(clientMuteUnmute)) {
-							c.mutedClients.remove(clientMuteUnmute);
-							break;
-						}
-					}
-
+					client.mutedClients.remove(clientMuteUnmute);
+					wasCommand = true;
+					break;
 				}
 			}
 		} catch (Exception e) {
@@ -204,9 +194,8 @@ public class Room implements AutoCloseable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// client = privClient;
 		return wasPrivate;
-		// return message;
+
 	}
 
 	// TODO changed from string to ServerThread
@@ -243,7 +232,7 @@ public class Room implements AutoCloseable {
 		while (iter.hasNext()) {
 
 			ServerThread client = iter.next();
-			if (!sender.isMuted(sender.getClientName())) {
+			if (!client.isMuted(sender.getClientName())) {
 				boolean messageSent = client.send(sender.getClientName(), message);
 				if (!messageSent) {
 					iter.remove();
