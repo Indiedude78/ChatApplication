@@ -8,4 +8,5 @@ public interface Event {
 	void onMessageReceive(String clientName, String message);
 
 	void onChangeRoom();
+
 }
