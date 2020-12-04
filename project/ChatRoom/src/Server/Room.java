@@ -120,7 +120,7 @@ public class Room implements AutoCloseable {
 				}
 				String roomName;
 				String clientMuteUnmute;
-				// Iterator<ServerThread> iter = clients.iterator();
+				Iterator<ServerThread> iter = clients.iterator();
 				switch (command) {
 				case CREATE_ROOM:
 					roomName = comm2[1];
@@ -152,12 +152,29 @@ public class Room implements AutoCloseable {
 					break;
 				case MUTE:
 					clientMuteUnmute = comm2[1];
-					client.mutedClients.add(clientMuteUnmute);
+					if (!client.getClientName().equals(clientMuteUnmute)) {
+						client.mutedClients.add(clientMuteUnmute);
+						while (iter.hasNext()) {
+							ServerThread mutedC = iter.next();
+							if (mutedC.getClientName().equals(clientMuteUnmute)) {
+								mutedC.send("[NOTIFICATION]", "You have been MUTED by : " + client.getClientName());
+								client.send("[NOTIFICATION]", "You muted : " + mutedC.getClientName());
+							}
+						}
+					}
+
 					wasCommand = true;
 					break;
 				case UNMUTE:
 					clientMuteUnmute = comm2[1];
 					client.mutedClients.remove(clientMuteUnmute);
+					while (iter.hasNext()) {
+						ServerThread mutedC = iter.next();
+						if (mutedC.getClientName().equals(clientMuteUnmute)) {
+							mutedC.send("[NOTIFICATION]", "You have been UNMUTED by : " + client.getClientName());
+							client.send("[NOTIFICATION]", "You unmuted : " + mutedC.getClientName());
+						}
+					}
 					wasCommand = true;
 					break;
 				}
@@ -186,7 +203,7 @@ public class Room implements AutoCloseable {
 			Iterator<ServerThread> iter = clients.iterator();
 			while (iter.hasNext()) {
 				ServerThread c = iter.next();
-				if (c.getClientName().equals(privClient)) {
+				if (c.getClientName().equals(privClient) && !c.isMuted(client.getClientName())) {
 					c.send(client.getClientName(), privateMessageReceive + newMessage);
 					client.send(client.getClientName(), privateMessageSent + newMessage);
 				}
