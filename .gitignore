@@ -2,7 +2,7 @@ myprivatecreds.*
 testforgitignore.*
 /.metadata/
 # Java Related
-*.jar
+
 *.war
 *.ear
 *.class
