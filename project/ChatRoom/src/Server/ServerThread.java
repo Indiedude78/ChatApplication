@@ -32,6 +32,10 @@ public class ServerThread extends Thread {
 		return false;
 	}
 
+	public List<String> getMutedList() {
+		return mutedClients;
+	}
+
 	public String getClientName() {
 		return clientName;
 	}

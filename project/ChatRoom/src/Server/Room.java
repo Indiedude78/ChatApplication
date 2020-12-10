@@ -43,6 +43,10 @@ public class Room implements AutoCloseable {
 
 	private List<ServerThread> clients = new ArrayList<ServerThread>();
 
+	public List<ServerThread> getClientsList() {
+		return clients;
+	}
+
 	protected synchronized void addClient(ServerThread client) {
 		client.setCurrentRoom(this);
 		if (clients.indexOf(client) > -1) {

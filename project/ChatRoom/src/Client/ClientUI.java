@@ -32,6 +32,8 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 
+import Server.ServerThread;
+
 public class ClientUI extends JFrame implements Event {
 	/**
 	 * 
@@ -41,9 +43,12 @@ public class ClientUI extends JFrame implements Event {
 	ClientUI self;
 	JPanel textArea;
 	JPanel userPanel;
+	ServerThread c;
 	List<User> users = new ArrayList<User>();
+	List<String> mutedClients = c.getMutedList();
 	private final static Logger log = Logger.getLogger(ClientUI.class.getName());
 	Dimension windowSize = new Dimension(450, 500);
+	JTextField username;
 
 	public ClientUI(String title) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -99,7 +104,7 @@ public class ClientUI extends JFrame implements Event {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		JLabel userLabel = new JLabel("Username:");
-		JTextField username = new JTextField();
+		username = new JTextField();
 		panel.add(userLabel);
 		panel.add(username);
 		JButton button = new JButton("Join");
