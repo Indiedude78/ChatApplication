@@ -158,15 +158,16 @@ public class Room implements AutoCloseable {
 					clientMuteUnmute = comm2[1];
 					if (!client.getClientName().equals(clientMuteUnmute)) {
 						client.mutedClients.add(clientMuteUnmute);
+
 						while (iter.hasNext()) {
 							ServerThread mutedC = iter.next();
 							if (mutedC.getClientName().equals(clientMuteUnmute)) {
 								mutedC.send("[NOTIFICATION]", "You have been MUTED by : " + client.getClientName());
 								client.send("[NOTIFICATION]", "You muted : " + mutedC.getClientName());
+								client.sendMute(mutedC.getClientName());
 							}
 						}
 					}
-
 					wasCommand = true;
 					break;
 				case UNMUTE:
@@ -177,6 +178,7 @@ public class Room implements AutoCloseable {
 						if (mutedC.getClientName().equals(clientMuteUnmute)) {
 							mutedC.send("[NOTIFICATION]", "You have been UNMUTED by : " + client.getClientName());
 							client.send("[NOTIFICATION]", "You unmuted : " + mutedC.getClientName());
+							client.sendUnmute(mutedC.getClientName());
 						}
 					}
 					wasCommand = true;

@@ -2,6 +2,7 @@ package Client;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -32,8 +33,6 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 
-import Server.ServerThread;
-
 public class ClientUI extends JFrame implements Event {
 	/**
 	 * 
@@ -43,9 +42,8 @@ public class ClientUI extends JFrame implements Event {
 	ClientUI self;
 	JPanel textArea;
 	JPanel userPanel;
-	ServerThread c;
+	User u;
 	List<User> users = new ArrayList<User>();
-	List<String> mutedClients = c.getMutedList();
 	private final static Logger log = Logger.getLogger(ClientUI.class.getName());
 	Dimension windowSize = new Dimension(450, 500);
 	JTextField username;
@@ -180,7 +178,7 @@ public class ClientUI extends JFrame implements Event {
 	}
 
 	void addClient(String name) {
-		User u = new User(name);
+		u = new User(name);
 		Dimension p = new Dimension(userPanel.getSize().width, 35);
 		u.setPreferredSize(p);
 		u.setMinimumSize(p);
@@ -322,6 +320,33 @@ public class ClientUI extends JFrame implements Event {
 			User u = iter.next();
 			removeClient(u);
 			iter.remove();
+		}
+	}
+
+	@Override
+	public void onMute(String clientName) {
+		// TODO Auto-generated method stub
+		Iterator<User> iter = users.iterator();
+		while (iter.hasNext()) {
+			User u = iter.next();
+			if (u.getName().equals(clientName)) {
+				u.revalidate();
+				u.repaint();
+				u.setForeground(Color.red);
+			}
+		}
+	}
+
+	@Override
+	public void onUnmute(String clientName) {
+		// TODO Auto-generated method stub
+		Iterator<User> iter = users.iterator();
+		while (iter.hasNext()) {
+			User u = iter.next();
+			if (u.getName().equals(clientName)) {
+				u.revalidate();
+				u.repaint();
+			}
 		}
 	}
 

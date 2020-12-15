@@ -108,6 +108,16 @@ public class SocketClient {
 				event.onChangeRoom();
 			}
 			break;
+		case MUTE:
+			if (event != null) {
+				event.onMute(p.getClientName());
+				break;
+			}
+		case UNMUTE:
+			if (event != null) {
+				event.onUnmute(p.getClientName());
+				break;
+			}
 		default:
 			log.log(Level.WARNING, "unhandled payload on client" + p);
 			break;

@@ -87,6 +87,21 @@ public class ServerThread extends Thread {
 	 * @param message
 	 * @return
 	 */
+
+	protected boolean sendMute(String clientName) {
+		Payload payload = new Payload();
+		payload.setPayloadType(PayloadType.MUTE);
+		payload.setClientName(clientName);
+		return sendPayload(payload);
+	}
+
+	protected boolean sendUnmute(String clientName) {
+		Payload payload = new Payload();
+		payload.setPayloadType(PayloadType.UNMUTE);
+		payload.setClientName(clientName);
+		return sendPayload(payload);
+	}
+
 	protected boolean send(String clientName, String message) {
 		Payload payload = new Payload();
 		payload.setPayloadType(PayloadType.MESSAGE);
@@ -203,6 +218,16 @@ public class ServerThread extends Thread {
 		case CLEAR_PLAYERS:
 			// we currently don't need to do anything since the UI/Client won't be sending
 			// this
+			break;
+		case MUTE:
+			Iterator<String> iter = mutedClients.iterator();
+			while (iter.hasNext()) {
+				String mutedC = iter.next();
+				sendMute(mutedC);
+			}
+			break;
+		case UNMUTE:
+			sendUnmute(p.getClientName());
 			break;
 		default:
 			log.log(Level.INFO, "Unhandled payload on server: " + p);

@@ -9,4 +9,8 @@ public interface Event {
 
 	void onChangeRoom();
 
+	void onMute(String clientName);
+
+	void onUnmute(String clientName);
+
 }
