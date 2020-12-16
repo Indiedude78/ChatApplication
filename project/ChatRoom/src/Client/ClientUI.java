@@ -42,7 +42,6 @@ public class ClientUI extends JFrame implements Event {
 	ClientUI self;
 	JPanel textArea;
 	JPanel userPanel;
-	User u;
 	List<User> users = new ArrayList<User>();
 	private final static Logger log = Logger.getLogger(ClientUI.class.getName());
 	Dimension windowSize = new Dimension(450, 500);
@@ -178,7 +177,7 @@ public class ClientUI extends JFrame implements Event {
 	}
 
 	void addClient(String name) {
-		u = new User(name);
+		User u = new User(name);
 		Dimension p = new Dimension(userPanel.getSize().width, 35);
 		u.setPreferredSize(p);
 		u.setMinimumSize(p);
@@ -330,9 +329,9 @@ public class ClientUI extends JFrame implements Event {
 		while (iter.hasNext()) {
 			User u = iter.next();
 			if (u.getName().equals(clientName)) {
-				u.revalidate();
-				u.repaint();
-				u.setForeground(Color.red);
+				userPanel.revalidate();
+				userPanel.repaint();
+				userPanel.setBackground(Color.red);
 			}
 		}
 	}
@@ -344,8 +343,8 @@ public class ClientUI extends JFrame implements Event {
 		while (iter.hasNext()) {
 			User u = iter.next();
 			if (u.getName().equals(clientName)) {
-				u.revalidate();
-				u.repaint();
+				userPanel.revalidate();
+				userPanel.repaint();
 			}
 		}
 	}

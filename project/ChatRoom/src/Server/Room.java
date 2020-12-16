@@ -266,6 +266,17 @@ public class Room implements AutoCloseable {
 		}
 	}
 
+	public void sendMute(String mutedC) {
+		// TODO Auto-generated method stub
+		Iterator<ServerThread> iter = clients.iterator();
+		while (iter.hasNext()) {
+			ServerThread client = iter.next();
+			if (client.isMuted(mutedC)) {
+				client.sendMute(mutedC);
+			}
+		}
+	}
+
 	/***
 	 * Will attempt to migrate any remaining clients to the Lobby room. Will then
 	 * set references to null and should be eligible for garbage collection

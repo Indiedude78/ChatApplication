@@ -223,7 +223,7 @@ public class ServerThread extends Thread {
 			Iterator<String> iter = mutedClients.iterator();
 			while (iter.hasNext()) {
 				String mutedC = iter.next();
-				sendMute(mutedC);
+				currentRoom.sendMute(mutedC);
 			}
 			break;
 		case UNMUTE:

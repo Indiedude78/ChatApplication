@@ -40,6 +40,13 @@ public class SocketClient {
 		return payload;
 	}
 
+	private static Payload buildMutedClient(String name) {
+		Payload payload = new Payload();
+		payload.setPayloadType(PayloadType.MUTE);
+		payload.setClientName(name);
+		return payload;
+	}
+
 	private static void sendPayload(Payload p) {
 		try {
 			out.writeObject(p);
@@ -158,6 +165,10 @@ public class SocketClient {
 
 	public static void sendMessage(String message) {
 		sendPayload(buildMessage(message));
+	}
+
+	public static void sendMuteStatus(String username) {
+		sendPayload(buildMutedClient(username));
 	}
 
 	public static boolean start() throws IOException {
