@@ -44,6 +44,7 @@ public class ClientUI extends JFrame implements Event {
 	List<User> users = new ArrayList<User>();
 	private final static Logger log = Logger.getLogger(ClientUI.class.getName());
 	Dimension windowSize = new Dimension(450, 500);
+	String name;
 
 	public ClientUI(String title) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,9 +108,10 @@ public class ClientUI extends JFrame implements Event {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String name = username.getText();
+				name = username.getText();
 				if (name != null && name.length() > 0) {
 					SocketClient.setUsername(name);
+					createFile(name + "_ChatLogs.txt");
 					self.next();
 				}
 			}
@@ -305,9 +307,21 @@ public class ClientUI extends JFrame implements Event {
 
 	@Override
 	public void onMessageReceive(String clientName, String message) {
+		String outMessage = message;
 		log.log(Level.INFO, String.format("%s: %s", clientName, message));
 		self.addMessage(String.format("<i>%s:</i> %s", clientName, message));
-		writeToFile("log.txt", clientName + ": " + message);
+		for (int i = 0; i < message.length(); ++i) {
+			if (outMessage.contains("<b>") || outMessage.contains("</b>") || outMessage.contains("<i>")
+					|| outMessage.contains("</i>") || outMessage.contains("<u>") || outMessage.contains("</u>")) {
+				outMessage = outMessage.replace("<b>", "");
+				outMessage = outMessage.replace("</b>", "");
+				outMessage = outMessage.replace("<i>", "");
+				outMessage = outMessage.replace("</i>", "");
+				outMessage = outMessage.replace("<u>", "");
+				outMessage = outMessage.replace("</u>", "");
+			}
+		}
+		writeToFile(name + "_ChatLogs.txt", clientName + ": " + outMessage);
 	}
 
 	@Override
@@ -325,6 +339,6 @@ public class ClientUI extends JFrame implements Event {
 		if (ui != null) {
 			log.log(Level.FINE, "Started");
 		}
-		createFile("log.txt");
+
 	}
 }
