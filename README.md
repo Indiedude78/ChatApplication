@@ -1,4 +1,6 @@
-# IT114
-## Smit
+# Basic Chat App
+#### Made in Java
 
-My first file
+*Feel free to download the project files and play around with the code*
+
+
